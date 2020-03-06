@@ -97,12 +97,12 @@ nsamples          = len(trainlist)
 init_width        = model.width
 init_height       = model.height
 init_epoch        = 0 if cfg.tuning else model.seen/nsamples
-max_epochs        = max_batches*batch_size/nsamples+1
+max_epochs        = max_batches * batch_size / nsamples + 1
 max_epochs        = int(math.ceil(cfg.max_epoch*1./cfg.repeat)) if cfg.tuning else max_epochs 
 print(cfg.repeat, nsamples, max_batches, batch_size)
 print(num_workers)
 
-kwargs = {'num_workers': num_workers, 'pin_memory': True} if use_cuda else {}
+kwargs = {'num_workers': num_workers, 'pin_memory': False} if use_cuda else {}
 test_loader = torch.utils.data.DataLoader(
     dataset.listDataset(testlist, shape=(init_width, init_height),
                    shuffle=False,
@@ -117,7 +117,7 @@ test_metaloader = torch.utils.data.DataLoader(
     batch_size=test_metaset.batch_size,
     shuffle=False,
     num_workers=num_workers//2,
-    pin_memory=True
+    pin_memory=False
 )
 
 # Adjust learning rate
@@ -188,7 +188,7 @@ def train(epoch):
         batch_size=metaset.batch_size,
         shuffle=False,
         num_workers=num_workers,
-        pin_memory=True
+        pin_memory=False
     )
     metaloader = iter(metaloader)
 
@@ -321,6 +321,6 @@ if evaluate:
     logging('evaluating ...')
     test(0)
 else:
-    for epoch in range(init_epoch, max_epochs):
+    for epoch in range(int(init_epoch), int(max_epochs)):
         train(epoch)
         # test(epoch)

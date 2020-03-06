@@ -8,3 +8,6 @@ output*
 *.pyc
 darknet19_448.conv.23
 pycocotools*
+
+data/**
+.ipynb_checkpoints/**
